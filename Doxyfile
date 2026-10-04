@@ -1,0 +1,23 @@
+PROJECT_NAME           = "Sistema de Ordenes de Trabajo - TelcoSur"
+PROJECT_NUMBER         = "0.1.0"
+PROJECT_BRIEF          = "API REST para gestion de ordenes de trabajo"
+OUTPUT_DIRECTORY       = docs/doxygen
+INPUT                  = src/backend/src
+RECURSIVE              = YES
+EXCLUDE                = src/backend/node_modules
+FILE_PATTERNS          = *.js
+EXTENSION_MAPPING      = js=JavaScript
+OPTIMIZE_OUTPUT_JAVA   = YES
+EXTRACT_ALL            = YES
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+HTML_COLORSTYLE_HUE    = 145
+GENERATE_LATEX         = NO
+SEARCHENGINE           = YES
+GENERATE_TREEVIEW      = YES
+HAVE_DOT               = YES
+CALL_GRAPH             = YES
+CLASS_DIAGRAMS         = YES
+JAVADOC_AUTOBRIEF      = YES
+USE_MDFILE_AS_MAINPAGE = docs/mainpage.md
+MARKDOWN_SUPPORT       = YES
