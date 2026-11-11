@@ -32,12 +32,10 @@ CREATE TABLE IF NOT EXISTS tecnicos (
 
 CREATE TABLE IF NOT EXISTS ordenes_trabajo (
     id SERIAL PRIMARY KEY,
-    codigo VARCHAR(20) UNIQUE NOT NULL,
+    contratista_id INTEGER REFERENCES contratistas(id),  -- <-- AGREGAR ESTA LÍNEA
     sitio_id INTEGER REFERENCES sitios(id),
     cuadrilla_id INTEGER REFERENCES cuadrillas(id),
-    tipo VARCHAR(20) CHECK (tipo IN ('FALLA','MANTENIMIENTO','INSTALACION')),
-    prioridad VARCHAR(20) CHECK (prioridad IN ('ALTA','MEDIA','BAJA')),
-    estado VARCHAR(20) DEFAULT 'CREADA',
+    estado VARCHAR(20) DEFAULT 'CREADA' CHECK (estado IN ('CREADA', 'ASIGNADA', 'EN_EJECUCION', 'CERRADA')),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     sla_horas INTEGER
 );

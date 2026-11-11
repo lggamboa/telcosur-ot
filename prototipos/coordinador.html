@@ -8,21 +8,62 @@
         .header { background: #006C5B; color: white; padding: 10px; }
         .ot-card { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
         .btn { background: #009681; color: white; padding: 5px 10px; border: none; cursor: pointer; }
+        .btn:hover { background: #007a69; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Panel de Órdenes de Trabajo</h1>
     </div>
-    <div class="ot-card">
-        <h3>OT-045 - Sitio RB-102</h3>
-        <p>Estado: <strong>Pendiente</strong></p>
-        <button class="btn">Asignar Contratista</button>
+    <div id="ordenes-container">
+        <p>Cargando órdenes...</p>
     </div>
-    <div class="ot-card">
-        <h3>OT-046 - Sitio RB-205</h3>
-        <p>Estado: <strong>En Ejecución</strong></p>
-        <button class="btn">Ver Detalles</button>
-    </div>
+
+    <script>
+        async function cargarOrdenes() {
+            const container = document.getElementById('ordenes-container');
+            try {
+                const response = await fetch('http://localhost:3000/api/ordenes');
+                const ordenes = await response.json();
+
+                if (ordenes.length === 0) {
+                    container.innerHTML = '<p>No hay órdenes de trabajo creadas.</p>';
+                    return;
+                }
+
+                container.innerHTML = ordenes.map(ot => `
+                    <div class="ot-card">
+                        <h3>OT-${ot.id} - Sitio ${ot.Sitio ? ot.Sitio.codigo : 'N/A'}</h3>
+                        <p>Estado: <strong>${ot.estado}</strong></p>
+                        <p>SLA: ${ot.sla_horas} horas</p>
+                        <button class="btn" onclick="asignarOT(${ot.id})">Asignar Contratista</button>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<p>Error al cargar las órdenes. ¿Está el backend corriendo?</p>';
+                console.error(error);
+            }
+        }
+
+        async function asignarOT(id) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/ordenes/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contratista_id: 1, estado: 'ASIGNADA' })
+                });
+                if (response.ok) {
+                    alert(`OT-${id} asignada correctamente`);
+                    cargarOrdenes();
+                } else {
+                    alert('Error al asignar la OT');
+                }
+            } catch (error) {
+                alert('Error de conexión con el servidor');
+            }
+        }
+
+        cargarOrdenes();
+    </script>
 </body>
 </html>

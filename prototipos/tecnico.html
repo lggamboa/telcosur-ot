@@ -7,20 +7,78 @@
         body { font-family: Arial; margin: 0; padding: 0; width: 375px; margin: auto; }
         .header { background: #006C5B; color: white; padding: 15px; text-align: center; }
         .card { border: 1px solid #ccc; padding: 15px; margin: 10px; border-radius: 8px; }
-        .btn-primary { background: #009681; color: white; padding: 10px; width: 100%; border: none; border-radius: 5px; margin-top: 10px; }
-        .btn-secondary { background: #63666A; color: white; padding: 10px; width: 100%; border: none; border-radius: 5px; margin-top: 10px; }
+        .btn-primary { background: #009681; color: white; padding: 10px; width: 100%; border: none; border-radius: 5px; margin-top: 10px; cursor: pointer; }
+        .btn-secondary { background: #63666A; color: white; padding: 10px; width: 100%; border: none; border-radius: 5px; margin-top: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="header">
         <h2>Mi OT</h2>
     </div>
-    <div class="card">
-        <h3>OT-045</h3>
-        <p>Sitio: RB-102</p>
-        <p>Repuesto: Cable</p>
-        <button class="btn-primary">Reportar Avance</button>
-        <button class="btn-secondary">Cerrar OT</button>
+    <div id="ot-container">
+        <p>Cargando...</p>
     </div>
+
+    <script>
+        async function cargarOT() {
+            const container = document.getElementById('ot-container');
+            try {
+                const response = await fetch('http://localhost:3000/api/ordenes');
+                const ordenes = await response.json();
+
+                const ot = ordenes.find(o => o.estado === 'ASIGNADA' || o.estado === 'CREADA');
+                if (!ot) {
+                    container.innerHTML = '<p>No hay órdenes asignadas.</p>';
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="card">
+                        <h3>OT-${ot.id}</h3>
+                        <p>Sitio: ${ot.Sitio ? ot.Sitio.codigo : 'N/A'}</p>
+                        <p>Estado: <strong>${ot.estado}</strong></p>
+                        <button class="btn-primary" onclick="reportarAvance(${ot.id})">Reportar Avance</button>
+                        <button class="btn-secondary" onclick="cerrarOT(${ot.id})">Cerrar OT</button>
+                    </div>
+                `;
+            } catch (error) {
+                container.innerHTML = '<p>Error de conexión. ¿Está el backend corriendo?</p>';
+            }
+        }
+
+        async function reportarAvance(id) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/ordenes/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: 'EN_EJECUCION' })
+                });
+                if (response.ok) {
+                    alert(`OT-${id} actualizada a EN_EJECUCION`);
+                    cargarOT();
+                }
+            } catch (error) {
+                alert('Error al reportar avance');
+            }
+        }
+
+        async function cerrarOT(id) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/ordenes/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: 'CERRADA' })
+                });
+                if (response.ok) {
+                    alert(`OT-${id} cerrada correctamente`);
+                    cargarOT();
+                }
+            } catch (error) {
+                alert('Error al cerrar la OT');
+            }
+        }
+
+        cargarOT();
+    </script>
 </body>
 </html>

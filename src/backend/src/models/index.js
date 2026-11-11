@@ -32,6 +32,6 @@ db.Sitio.hasMany(db.OrdenTrabajo, { foreignKey: 'sitio_id' });
 db.OrdenTrabajo.belongsTo(db.Sitio, { foreignKey: 'sitio_id' });
 
 db.Contratista.hasMany(db.OrdenTrabajo, { foreignKey: 'contratista_id' });
-db.OrdenTrabajo.belongsTo(db.Contratista, { foreignKey: 'contratista_id' });
+db.OrdenTrabajo.belongsTo(db.Contratista, { as: 'Contratista', foreignKey: 'contratista_id' });
 
 module.exports = db;
