@@ -1,0 +1,30 @@
+@startuml
+class Sitio {
+  - id: int
+  - ubicacion: string
+  - criticidad: string
+  + getCriticidad()
+}
+class OrdenTrabajo {
+  - id: int
+  - estado: string
+  - fecha: Date
+  + asignar()
+  + cerrar()
+}
+class Contratista {
+  - id: int
+  - nombre: string
+  - zona: string
+  + getCuadrillas()
+}
+class Cuadrilla {
+  - id: int
+  - disponible: bool
+  + asignarTecnico()
+}
+
+Sitio "1" --> "1..*" OrdenTrabajo
+Sitio "1" --> "0..*" Contratista
+Contratista "1" *-- "1..*" Cuadrilla
+@enduml

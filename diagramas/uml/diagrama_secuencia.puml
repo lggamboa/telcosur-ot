@@ -1,0 +1,15 @@
+@startuml
+actor Coordinador
+participant "PantallaAsignarOT" as UI
+participant "GestorAsignacion" as Ctrl
+participant "OrdenTrabajo" as OT
+database "Base de Datos" as DB
+
+Coordinador -> UI: Solicitar asignación
+UI -> Ctrl: asignarOT(id, contratista)
+Ctrl -> DB: verificarDisponibilidad(contratista)
+DB --> Ctrl: OK
+Ctrl -> OT: cambiarEstado("ASIGNADA")
+Ctrl -> UI: confirmarAsignacion()
+UI --> Coordinador: Mostrar éxito
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+[*] --> Creada
+Creada --> Asignada : Asignar contratista
+Asignada --> EnEjecucion : Iniciar reparación
+EnEjecucion --> Cerrada : Finalizar OT
+Cerrada --> [*]
+@enduml
