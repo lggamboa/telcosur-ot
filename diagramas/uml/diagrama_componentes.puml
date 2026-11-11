@@ -1,0 +1,14 @@
+@startuml
+package "TelcoSur - Sistema de OT" {
+  [Frontend Web\n(Coordinador)] as Web
+  [App Móvil\n(Técnico)] as Mobile
+  [API Backend\n(Node.js + Express)] as API
+  database "Base de Datos\n(PostgreSQL)" as DB
+  [Servicio de\nNotificaciones] as Notif
+}
+
+Web --> API : HTTP/REST
+Mobile --> API : HTTP/REST
+API --> DB : Sequelize
+API --> Notif : Envío de alertas
+@enduml

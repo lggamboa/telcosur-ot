@@ -1,0 +1,21 @@
+@startuml
+node "Servidor de Aplicaciones" as AppServer {
+  artifact "API Backend\n(Node.js)" as API
+}
+
+node "Servidor de Base de Datos" as DBServer {
+  database "PostgreSQL" as DB
+}
+
+node "PC del Coordinador" as PC {
+  artifact "Navegador Web\n(React)" as Browser
+}
+
+node "Smartphone del Técnico" as Phone {
+  artifact "App Móvil\n(React Native)" as App
+}
+
+AppServer -- DBServer : Conexión TCP/IP
+PC -- AppServer : HTTPS
+Phone -- AppServer : HTTPS
+@enduml
